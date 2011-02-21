@@ -126,8 +126,8 @@ class FetchNews(webapp.RequestHandler):
 		plurk = PlurkHelper(config.API_KEY)
 		login = plurk.login(config.USERNAME, config.PASSWORD)
 		
-		#if DEBUG == True:
-		#	self.puts("<p>login: %s</p>" % login)
+		if DEBUG == True:
+			self.puts("<p>login: %s</p>" % str(login))
 		
 		# Add each entry to table
 		for entry in feed_dict.entries:
