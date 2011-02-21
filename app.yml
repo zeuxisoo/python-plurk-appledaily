@@ -1,4 +1,4 @@
-application: hkappledaily
+application: plurk-hkappledaily
 version: 1
 runtime: python
 api_version: 1
@@ -6,3 +6,7 @@ api_version: 1
 handlers:
 - url: /.*
   script: index.py
+  
+  
+builtins:
+- datastore_admin: on
