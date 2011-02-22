@@ -165,7 +165,7 @@ class FetchNews(webapp.RequestHandler):
 						news.put()
 						self.puts("<p>-- Saved</p>")
 						
-						time.sleep(50)
+						time.sleep(5) # delay 300 secs -- for anti-flood(HTTPError: HTTP Error 400: BAD REQUEST)
 				except UnicodeEncodeError:
 					self.puts("<p>Unicode Error %s</p>")
 					
