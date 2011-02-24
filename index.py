@@ -138,7 +138,7 @@ class FetchNews(webapp.RequestHandler):
 					self.puts("<p>%s :: %s</p>" % (entry.title, entry.updated_parsed))
 					
 					# Create plurk content
-					message = u'%s (%s)' % (entry.link, entry.title)
+					message = u'[HKAppleNews] %s (%s)' % (entry.link, entry.title)
 					message = message.encode("utf-8")
 					
 					# Debug is or not encode message success?
