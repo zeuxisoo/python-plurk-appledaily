@@ -14,9 +14,6 @@ from django.utils import simplejson as json
 # Import system package
 import time, datetime, urllib, urllib2, cookielib, logging
 
-# Custom file
-import config
-
 # Try to import feedparser (append library in sys path)
 try:
 	import feedparser, pytz
@@ -24,6 +21,9 @@ except ImportError:
 	import sys, os
 	sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'library'))
 	import feedparser, pytz
+	
+# Custom file
+import config, googl
 
 # Entry
 class NewsEntry(object):
@@ -136,9 +136,12 @@ class FetchNews(webapp.RequestHandler):
 				try:
 					# Display news
 					self.puts("<p>%s :: %s</p>" % (entry.title, entry.updated_parsed))
+
+					# Short url by goo.gl
+					entry.link = googl.shorten(entry.link)
 					
 					# Create plurk content
-					message = u'[HKAppleNews] %s (%s)' % (entry.link, entry.title)
+					message = u'%s (%s)' % (entry.link, entry.title)
 					message = message.encode("utf-8")
 					
 					# Debug is or not encode message success?
