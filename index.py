@@ -4,6 +4,7 @@
 DEBUG = True
 ENABLE_PLURK_TEST_PAGE = False
 XML_NEWS_FEED = "http://rss.appleactionews.com/rss.xml"
+POST_ENTRY_URL = False
 
 # Import GAE package
 from google.appengine.ext import db
@@ -98,10 +99,11 @@ class PlurkHelper(object):
 				urllib.urlencode({'content': content, 'qualifier': 'says', 'lang': 'en', 'api_key': self.api_key})
 			)
 		except urllib2.HTTPError, message:
-			logging.debug('HTTP Error on PlurkHelper.add_content')
+			logging.debug('HTTP Error on PlurkHelper.add_content\n%s')
 			
 			if message.code == 400:
 				response = json.loads(message.fp.read().decode("utf-8"))
+				logging.debug('PlurkHelper.add_content 400\n%s' % response)
 				
 		return response
 		
@@ -127,6 +129,7 @@ class FetchNews(webapp.RequestHandler):
 		login = plurk.login(config.USERNAME, config.PASSWORD)
 		
 		if DEBUG == True:
+			self.puts("<p>Post Entry Link: %s</p>" % ("Yes" if POST_ENTRY_URL is True else "No"))
 			self.puts("<p>login: %s</p>" % str(login))
 		
 		# Add each entry to table
@@ -135,15 +138,22 @@ class FetchNews(webapp.RequestHandler):
 			if entry.title not in temp_entry:
 				try:
 					# Display news
-					self.puts("<p>%s :: %s</p>" % (entry.title, entry.updated_parsed))
+					self.puts("<p>%s :: %s</p>" % (entry.title, entry.updated_parsed))				
 
-					# Short url by goo.gl
-					entry.link = googl.shorten(entry.link)
-					
-					# Create plurk content
-					message = u'%s (%s)' % (entry.link, entry.title)
-					message = message.encode("utf-8")
-					
+					# Display format				
+					if POST_ENTRY_URL is True:	
+						# Short url by goo.gl
+						entry.link = googl.shorten(entry.link)
+						
+						# Create plurk content
+						message = u'%s (%s)' % (entry.link, entry.title)
+						message = message.encode("utf-8")
+					else:
+						# Create plurk content
+						message = u'%s' % (entry.title)
+						message = message.encode("utf-8")
+						
+										
 					# Debug is or not encode message success?
 					# Using utf-8 to decode, Because it is encode by utf-8
 					if DEBUG is True:
