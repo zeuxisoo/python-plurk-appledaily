@@ -1,4 +1,4 @@
 cron:
 - description: fetch hk apple diaply news
   url: /fetch-news
-  schedule: every 6 minutes
+  schedule: every 20 minutes
